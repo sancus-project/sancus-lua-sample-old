@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -x
+cd "${0%/*}"
+
+SOCKET=./myapp.sock
+
+LUA_PATH="./lua/?.lua;./lua/?/init.lua;;"
+LUA_CPATH="./lua/?.so;;"
+
+exec env - PATH="$PATH" APP_PATH="$PWD" \
+	LUA_PATH="$LUA_PATH" LUA_CPATH="$LUA_CPATH" \
+	spawn-fcgi -n -s "$SOCKET" -M 0666 \
+	-- ./myapp.fcgi
